@@ -1,6 +1,7 @@
-package main
+package arrays
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -240,6 +241,7 @@ func TestTrappedRainWater(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		fmt.Printf("t: %v\n", tc.input)
 		assert.Equal(t, tc.expected, TrappedRainWater(tc.input))
 	}
 }

@@ -1,7 +1,7 @@
-package main
+package arrays
 
 import (
-	"fmt"
+	"math"
 )
 
 func TraverseAdd(n []int) int {
@@ -88,54 +88,28 @@ func FindMinAndMax(arr []int) (min, max int) {
 	return
 }
 
-func TrappedRainWater(heights []int) (total int) {
-	left_index := 0
-	right_index := 0
-
-	for i := left_index; i < len(heights); i++ {
-		if (heights[i] == 0) {
-			continue
-		}
-
-		left_index = i
-		break;
+func TrappedRainWater(heights []int) int {
+	if len(heights) == 0 {
+		return 0
 	}
 
+	leftMax := make([]int, len(heights))
+	rightMax := make([]int, len(heights))
+
+	leftMax[0] = heights[0]
 	for i := 1; i < len(heights); i++ {
-		if heights[i] >= heights[left_index] {
-			right_index = i
-			break
-		}
+		leftMax[i] = int(math.Max(float64(leftMax[i-1]), float64(heights[i])))
 	}
 
-	blocks_between := right_index - left_index - 1
-	min_height := min(heights[left_index], heights[right_index])
+	rightMax[len(heights)-1] = heights[len(heights)-1]
+	for i := len(heights) - 2; i >= 0; i-- {
+		rightMax[i] = int(math.Max(float64(rightMax[i+1]), float64(heights[i])))
+	}
 
-	sum_of_heights_between := func() int {
-		var total int
+	var total int
+	for i := 0; i < len(heights); i++ {
+		total += int(math.Min(float64(leftMax[i]), float64(rightMax[i]))) - heights[i]
+	}
 
-		for i := left_index; i < right_index-1; i++ {
-			total += heights[i]
-		}
-
-		return total - min_height
-	}()
-
-
-
-	fmt.Println(heights)
-	fmt.Println("min height:", min_height)
-	fmt.Println("sum of heights between:", sum_of_heights_between)
-	fmt.Println()
-	fmt.Println()
-	total = (blocks_between*min_height) - sum_of_heights_between
-
-
-
-	// we are at the next height that is equal to or bigger than left_index
-	// TODO: EDGE CASES
-	// 1. nothing between them
-	// 2.
-
-	return
+	return total
 }
